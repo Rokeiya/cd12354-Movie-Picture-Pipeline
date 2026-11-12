@@ -1,3 +1,5 @@
+cd /workspace
+cat > .github/workflows/backend-cd.yaml <<'EOF'
 name: Backend CD
 
 on:
@@ -76,3 +78,5 @@ on:
                                                                                                                                                                                                                                                                                                                                                                                                                       run: |
                                                                                                                                                                                                                                                                                                                                                                                                                                 kustomize edit set image backend=${{ steps.ecr.outputs.registry }}/backend:${{ github.sha }}
                                                                                                                                                                                                                                                                                                                                                                                                                                           kustomize build | kubectl apply -f -
+                                                                                                                                                                                                                                                                                                                                                                                                                                          EOF
+                                                                                                                                                                                                                                                                                                                                                                                                                                          
