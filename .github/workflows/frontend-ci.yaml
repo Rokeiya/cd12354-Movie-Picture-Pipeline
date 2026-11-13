@@ -3,12 +3,8 @@ name: Frontend Continuous Integration
 on:
   pull_request:
     branches: [main]
-    paths:
-      - 'starter/frontend/**'
+    paths: ['starter/frontend/**']
   workflow_dispatch:
-
-env:
-  REACT_APP_MOVIE_API_URL: http://localhost:5000
 
 defaults:
   run:
@@ -35,12 +31,16 @@ jobs:
       - run: npm ci
       - run: CI=true npm test
 
-    build:
+  build:
     needs: [lint, test]
     runs-on: ubuntu-latest
     env:
       REACT_APP_MOVIE_API_URL: http://localhost:5000
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: starter/frontend/.nvmrc
+      - run: npm ci
       - name: Build Docker image
         run: docker build --build-arg=REACT_APP_MOVIE_API_URL=$REACT_APP_MOVIE_API_URL --tag=mp-frontend:latest .
