@@ -35,16 +35,12 @@ jobs:
       - run: npm ci
       - run: CI=true npm test
 
-  build:
+    build:
     needs: [lint, test]
     runs-on: ubuntu-latest
+    env:
+      REACT_APP_MOVIE_API_URL: http://localhost:5000
     steps:
       - uses: actions/checkout@v4
-      - uses: docker/setup-buildx-action@v3
-      - uses: docker/build-push-action@v5
-        with:
-          context: starter/frontend
-          push: false
-          tags: mp-frontend:latest
-          build-args: |
-            REACT_APP_MOVIE_API_URL=${{ env.REACT_APP_MOVIE_API_URL }}
+      - name: Build Docker image
+        run: docker build --build-arg=REACT_APP_MOVIE_API_URL=$REACT_APP_MOVIE_API_URL --tag=mp-frontend:latest .
